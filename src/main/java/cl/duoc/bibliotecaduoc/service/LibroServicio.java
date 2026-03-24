@@ -18,4 +18,25 @@ public class LibroServicio {
         return repo.findAll();
     }
 
+    public Libro obtenerPorId(int id){
+        if (id > 0) {
+            return repo.findById(id);
+        }
+        return null;
+    }
+
+    public List<Libro> buscarPorAutor(String palabra){
+        if (palabra != null && !palabra.isEmpty()) {
+            return repo.findByAutorContaining(palabra);
+        }
+        return List.of();
+    }
+
+    public Libro obtenerPorIsbn(String isbn){
+        if (isbn != null && !isbn.isEmpty()) {
+            return repo.findByIsbn(isbn);
+        }
+        return null;
+    }
+
 }

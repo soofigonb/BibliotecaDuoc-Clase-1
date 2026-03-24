@@ -26,8 +26,33 @@ public class LibroRepositorio {
 
     }
 
+    // Bucar todos los libros
     public List<Libro> findAll(){
         return listaLibros;
+    }
+
+    // Obtener un libro por ID
+    public Libro findById(int id){
+        return listaLibros.stream()
+        .filter(libro -> libro.getId() == id)
+        .findFirst().orElse(null);
+    }
+
+    //Obtener libro por autores que contengan X palabra
+    public List<Libro> findByAutorContaining(String palabra){
+        return listaLibros.stream()
+        .filter(libro -> libro.getAutor()
+        .toLowerCase()
+        .contains(palabra.toLowerCase()))
+        .toList();
+    }
+
+    //Obtener un libro por ISBN
+    public Libro findByIsbn(String isbn){
+        return listaLibros.stream()
+        .filter(libro -> libro.getIsbn().equals(isbn))
+        .findFirst()
+        .orElse(null);
     }
 
 }
