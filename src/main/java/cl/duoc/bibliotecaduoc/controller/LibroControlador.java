@@ -12,6 +12,9 @@ import cl.duoc.bibliotecaduoc.model.Libro;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
   
 
@@ -23,7 +26,7 @@ public class LibroControlador {
 
     private final LibroServicio servicio;
 
-    @GetMapping("") //http://localhost:8080/api/libros
+    @GetMapping("/buscar/todos") //http://localhost:8080/api/libros/buscar/todos
     public List<Libro> obtenerTodos(){
         return servicio.obtenerTodos();
     }
@@ -33,7 +36,7 @@ public class LibroControlador {
         return servicio.obtenerPorId(id);
     }
 
-    @GetMapping("/buscar") //http://localhost:8080/api/libros/buscar?autor=l
+    @GetMapping("/buscar/autor") //http://localhost:8080/api/libros/buscar/autor?autor=l
     public List<Libro> buscarPorAutor(@RequestParam String autor){
         return servicio.buscarPorAutor(autor);
     }
@@ -43,6 +46,15 @@ public class LibroControlador {
         return servicio.obtenerPorIsbn(isbn);
     }
     
+    @GetMapping("/buscar/titulo") // http://localhost:8080/api/libros/buscar/titulo?palabra=amor
+    public List<Libro> buscarPorTitulo(@RequestParam String palabra) {
+        return servicio.buscarPorTitulo(palabra);
+    }
+    
+    @PostMapping("/guardar") // http://localhost:8080/api/libros/guardar
+    public Libro guardarLibro(@RequestBody Libro libro) {
+        return servicio.guardarLibro(libro);
+    }
     
 
 }

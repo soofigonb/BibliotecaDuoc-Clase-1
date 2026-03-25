@@ -39,4 +39,18 @@ public class LibroServicio {
         return null;
     }
 
+    public List<Libro> buscarPorTitulo(String palabra){
+        if (palabra != null && !palabra.isEmpty()) {
+            return repo.findByTituloContaining(palabra);
+        }
+        return List.of();
+    }
+
+    public Libro guardarLibro (Libro libro){
+        if (libro != null && !libro.getTitulo().isEmpty()) {
+            return repo.save(libro);
+        } 
+        return null;
+    }
+
 }

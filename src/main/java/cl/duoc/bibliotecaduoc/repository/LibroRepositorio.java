@@ -55,4 +55,23 @@ public class LibroRepositorio {
         .orElse(null);
     }
 
+    //Obtener libros por titulo que contengan X palabra
+    public List<Libro> findByTituloContaining(String palabra){
+        return listaLibros.stream()
+        .filter(libro -> libro.getTitulo()
+        .toLowerCase()
+        .contains(palabra.toLowerCase()))
+        .toList();
+        
+    }
+
+    //Guardar un libro
+    public Libro save(Libro libro){
+        listaLibros.add(libro);
+        return libro;
+    }
+
+    //Actualizar un libro
+
+
 }
