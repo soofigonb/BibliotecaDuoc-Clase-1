@@ -53,4 +53,26 @@ public class LibroServicio {
         return null;
     }
 
+    public Libro actualizarLibro(Libro libro){
+        if (libro != null && libro.getId() > 0) {
+
+            Libro actualizado = repo.update(libro);
+
+            if (actualizado != null) {
+                return actualizado; 
+            }
+        }
+
+        return null;
+    }
+
+    public boolean eliminarLibro(int id) {
+
+        if (id <= 0) {
+            return false;
+        }
+
+        return repo.delete(id);
+    }
+
 }

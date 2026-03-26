@@ -71,7 +71,33 @@ public class LibroRepositorio {
         return libro;
     }
 
-    //Actualizar un libro
+
+    //Actualizar libro
+    public Libro update(Libro libro) {
+        Libro libroBuscado = findById(libro.getId());
+        if (libroBuscado != null) {
+            listaLibros.remove(libroBuscado);
+            listaLibros.add(libro);
+            return libro; 
+        }
+        return null;
+    }
+
+
+    //Borrar un libro por ID
+    public boolean delete(int id) {
+
+        Libro libroBuscado = findById(id);
+
+        if (libroBuscado != null) {
+            listaLibros.remove(libroBuscado);
+            return true; 
+        }
+
+        return false; 
+    }
+
+
 
 
 }
