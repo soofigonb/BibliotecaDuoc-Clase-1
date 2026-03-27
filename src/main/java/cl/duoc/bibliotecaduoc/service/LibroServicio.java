@@ -1,5 +1,6 @@
 package cl.duoc.bibliotecaduoc.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -62,7 +63,6 @@ public class LibroServicio {
                 return actualizado; 
             }
         }
-
         return null;
     }
 
@@ -73,6 +73,20 @@ public class LibroServicio {
         }
 
         return repo.delete(id);
+    }
+
+    public List<Libro> buscarPorFecha(LocalDate fecha){
+        if (fecha != null) {
+            return repo.findByFechaPublicacion(fecha);
+        }
+        return List.of();
+    }
+
+    public List<Libro> buscarPorEditorial(String editorial){
+        if (editorial != null && !editorial.isEmpty()) {
+            return repo.findByEditorial(editorial);
+        }
+        return List.of();
     }
 
 }

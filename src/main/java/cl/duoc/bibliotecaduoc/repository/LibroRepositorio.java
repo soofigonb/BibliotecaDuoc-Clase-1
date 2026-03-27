@@ -98,6 +98,24 @@ public class LibroRepositorio {
     }
 
 
+    //Obtener libros por fecha de publicación
+    public List<Libro> findByFechaPublicacion(LocalDate fecha){
+        return listaLibros.stream()
+        .filter(libro -> libro.getFechaPublicacion().equals(fecha))
+        .toList();
+    }
+
+
+    //Obtener libros por editorial
+    public List<Libro> findByEditorial(String editorial){
+        return listaLibros.stream()
+        .filter(libro -> libro.getEditorial()
+        .toLowerCase()
+        .contains(editorial.toLowerCase()))
+        .toList();   
+    }
+
+
 
 
 }
