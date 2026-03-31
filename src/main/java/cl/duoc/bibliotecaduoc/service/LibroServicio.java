@@ -20,73 +20,120 @@ public class LibroServicio {
     }
 
     public Libro obtenerPorId(int id){
-        if (id > 0) {
-            return repo.findById(id);
+
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a 0");
         }
-        return null;
+
+        Libro libro = repo.findById(id);
+
+        if (libro == null) {
+            throw new RuntimeException("Libro no encontrado");
+        }
+
+        return libro;
     }
 
     public List<Libro> buscarPorAutor(String palabra){
-        if (palabra != null && !palabra.isEmpty()) {
-            return repo.findByAutorContaining(palabra);
+
+        if (palabra == null || palabra.isEmpty()) {
+            throw new IllegalArgumentException("La palabra de búsqueda no puede estar vacía");
         }
-        return List.of();
+
+        return repo.findByAutorContaining(palabra);
     }
 
     public Libro obtenerPorIsbn(String isbn){
-        if (isbn != null && !isbn.isEmpty()) {
-            return repo.findByIsbn(isbn);
+
+        if (isbn == null || isbn.isEmpty()) {
+            throw new IllegalArgumentException("El ISBN no puede estar vacío");
         }
-        return null;
+
+        Libro libro = repo.findByIsbn(isbn);
+
+        if (libro == null) {
+            throw new RuntimeException("Libro no encontrado con ese ISBN");
+        }
+
+        return libro;
     }
 
     public List<Libro> buscarPorTitulo(String palabra){
-        if (palabra != null && !palabra.isEmpty()) {
-            return repo.findByTituloContaining(palabra);
+
+        if (palabra == null || palabra.isEmpty()) {
+            throw new IllegalArgumentException("La palabra de búsqueda no puede estar vacía");
         }
-        return List.of();
+
+        return repo.findByTituloContaining(palabra);
     }
 
     public Libro guardarLibro (Libro libro){
-        if (libro != null && !libro.getTitulo().isEmpty()) {
-            return repo.save(libro);
-        } 
-        return null;
+
+        if (libro == null) {
+            throw new IllegalArgumentException("El libro no puede ser nulo");
+        }
+
+        if (libro.getTitulo() == null || libro.getTitulo().isEmpty()) {
+            throw new IllegalArgumentException("El título del libro es obligatorio");
+        }
+
+        return repo.save(libro);
     }
 
     public Libro actualizarLibro(Libro libro){
-        if (libro != null && libro.getId() > 0) {
 
-            Libro actualizado = repo.update(libro);
-
-            if (actualizado != null) {
-                return actualizado; 
-            }
+        if (libro == null) {
+            throw new IllegalArgumentException("El libro no puede ser nulo");
         }
-        return null;
+
+        if (libro.getId() <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a 0");
+        }
+
+        Libro actualizado = repo.update(libro);
+
+        if (actualizado == null) {
+            throw new RuntimeException("No se pudo actualizar, libro no encontrado");
+        }
+
+        return actualizado;
     }
 
     public boolean eliminarLibro(int id) {
 
         if (id <= 0) {
-            return false;
+            throw new IllegalArgumentException("El ID debe ser mayor a 0");
         }
 
-        return repo.delete(id);
+        boolean eliminado = repo.delete(id);
+
+        if (!eliminado) {
+            throw new RuntimeException("No se pudo eliminar, libro no encontrado");
+        }
+
+        return true;
     }
 
     public List<Libro> buscarPorFecha(LocalDate fecha){
-        if (fecha != null) {
-            return repo.findByFechaPublicacion(fecha);
+
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha no puede ser nula");
         }
-        return List.of();
+
+        return repo.findByFechaPublicacion(fecha);
     }
 
     public List<Libro> buscarPorEditorial(String editorial){
-        if (editorial != null && !editorial.isEmpty()) {
-            return repo.findByEditorial(editorial);
+
+        if (editorial == null || editorial.isEmpty()) {
+            throw new IllegalArgumentException("La editorial no puede estar vacía");
         }
-        return List.of();
+
+        return repo.findByEditorial(editorial);
+    }
+
+    public int totalLibros(){
+        return repo.totalLibros();
     }
 
 }

@@ -28,39 +28,31 @@ public class LibroControlador {
 
     private final LibroServicio servicio;
 
-    @GetMapping("") 
+    @GetMapping("")
     public ResponseEntity<?> obtenerTodos() {
-        try {
-            List<Libro> lista = servicio.obtenerTodos();
+        List<Libro> lista = servicio.obtenerTodos();
 
-            if (lista.isEmpty()) {
-                return ResponseEntity.noContent().build(); 
-            }
-
-            return ResponseEntity.status(200).body(lista);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor");
+        if (lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
+
+        return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("/id/{id}") 
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> obtenerPorId(@PathVariable int id) {
         try {
-            Libro libro = servicio.obtenerPorId(id);
+            return ResponseEntity.ok(servicio.obtenerPorId(id));
 
-            if (libro == null) {
-                return ResponseEntity.status(404).body("Libro no encontrado");
-            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
 
-            return ResponseEntity.status(200).body(libro);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(List.of(e.getMessage()));
         }
     }
 
-    @GetMapping("/buscar/autor") 
+    @GetMapping("/buscar/autor")
     public ResponseEntity<?> buscarPorAutor(@RequestParam String autor) {
         try {
             List<Libro> lista = servicio.buscarPorAutor(autor);
@@ -69,29 +61,26 @@ public class LibroControlador {
                 return ResponseEntity.noContent().build();
             }
 
-            return ResponseEntity.status(200).body(lista);
+            return ResponseEntity.ok(lista);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
         }
     }
 
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<?> obtenerPorIsbn(@PathVariable String isbn) {
         try {
-            Libro libro = servicio.obtenerPorIsbn(isbn);
+            return ResponseEntity.ok(servicio.obtenerPorIsbn(isbn));
 
-            if (libro == null) {
-                return ResponseEntity.status(404).body("Libro no encontrado");
-            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
 
-            return ResponseEntity.status(200).body(libro);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(List.of(e.getMessage()));
         }
     }
-    
+
     @GetMapping("/buscar/titulo")
     public ResponseEntity<?> buscarPorTitulo(@RequestParam String palabra) {
         try {
@@ -101,58 +90,47 @@ public class LibroControlador {
                 return ResponseEntity.noContent().build();
             }
 
-            return ResponseEntity.status(200).body(lista);
+            return ResponseEntity.ok(lista);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
         }
     }
-    
+
     @PostMapping("")
     public ResponseEntity<?> guardarLibro(@RequestBody Libro libro) {
         try {
-            Libro nuevo = servicio.guardarLibro(libro);
+            return ResponseEntity.status(201).body(servicio.guardarLibro(libro));
 
-            if (nuevo == null) {
-                return ResponseEntity.badRequest().body("No se pudo agregar el libro");
-            }
-
-            return ResponseEntity.status(201).body(nuevo);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
         }
     }
-    
+
     @PutMapping("/actualizar")
     public ResponseEntity<?> actualizar(@RequestBody Libro libro) {
         try {
-            Libro actualizado = servicio.actualizarLibro(libro);
+            return ResponseEntity.ok(servicio.actualizarLibro(libro));
 
-            if (actualizado == null) {
-                return ResponseEntity.status(404).body("No se pudo actualizar el libro");
-            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
 
-            return ResponseEntity.status(200).body(actualizado);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(List.of(e.getMessage()));
         }
     }
 
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminar(@PathVariable int id) {
         try {
-            boolean eliminado = servicio.eliminarLibro(id);
+            servicio.eliminarLibro(id);
+            return ResponseEntity.ok(List.of("Libro eliminado correctamente"));
 
-            if (!eliminado) {
-                return ResponseEntity.status(404).body("Libro no encontrado");
-            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
 
-            return ResponseEntity.status(200).body("Libro eliminado correctamente");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(List.of(e.getMessage()));
         }
     }
 
@@ -167,13 +145,13 @@ public class LibroControlador {
                 return ResponseEntity.noContent().build();
             }
 
-            return ResponseEntity.status(200).body(lista);
+            return ResponseEntity.ok(lista);
 
         } catch (Exception e) {
-            return ResponseEntity.status(400).body("Formato de fecha inválido (yyyy-MM-dd)");
+            return ResponseEntity.badRequest().body(List.of("Formato de fecha inválido (yyyy-MM-dd)"));
         }
     }
-    
+
     @GetMapping("/buscar/editorial")
     public ResponseEntity<?> buscarPorEditorial(@RequestParam String editorial) {
         try {
@@ -183,11 +161,23 @@ public class LibroControlador {
                 return ResponseEntity.noContent().build();
             }
 
-            return ResponseEntity.status(200).body(lista);
+            return ResponseEntity.ok(lista);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(List.of(e.getMessage()));
         }
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<?> totalLibros(){
+        try {
+            int total = servicio.totalLibros();
+            return ResponseEntity.ok(total);
+
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(500)
+                    .body(List.of("Error al obtener el total de libros"));
+        }
+    }
 }
